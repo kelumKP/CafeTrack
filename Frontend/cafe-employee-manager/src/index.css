@@ -20,6 +20,7 @@ a {
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
 }
@@ -28,19 +29,44 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
+  flex-direction: column; /* Stack toolbar, content, and footer */
   min-width: 320px;
   min-height: 100vh;
   background-color: var(--background-color, #242424); /* Default background */
+  position: relative; /* Ensure full height */
 }
 
-/* Title styles */
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-  margin: 0;
+/* Toolbar styles */
+.toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #333; /* Background color of the toolbar */
+  padding: 1rem;
+  z-index: 10; /* Ensure it stays on top */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  height: 60px; /* Ensure the toolbar has a height */
+}
+
+/* Content area */
+.main-content {
+  flex: 1; /* This ensures content fills available space */
+  padding-top: 60px; /* Adjust top padding to account for fixed toolbar */
+  padding-bottom: 60px; /* Adjust for footer spacing */
   text-align: center;
+}
+
+/* Footer styles */
+.footer {
+  background-color: #333;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  width: 100%;
+  position: absolute;  /* Set footer at the bottom */
+  bottom: 0;
+  left: 0;
 }
 
 /* Button styles */
@@ -65,6 +91,30 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* Logo styles */
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+  max-width: 100%;
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
 }
 
 /* Light mode styles */

@@ -58,13 +58,15 @@ export const deleteCafe = async (id) => {
   }
 };
 
-// Fetch all employees
-export const getEmployees = async () => {
+// Fetch employees by Cafe
+export const getEmployeesByCafe = async (cafe) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/employees`);
+    const response = await axios.get(`${API_BASE_URL}/api/Employees`, {
+      params: { cafe },  // Passing the cafe string as a query parameter
+    });
     return response.data;
   } catch (error) {
-    console.error('Error fetching employees:', error);
+    console.error('Error fetching employees by cafe:', error);
     return [];
   }
 };
@@ -72,7 +74,7 @@ export const getEmployees = async () => {
 // Fetch a single employee by ID
 export const getEmployeeById = async (id) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/employees/${id}`);
+    const response = await axios.get(`${API_BASE_URL}/api/Employees/${id}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching employee:', error);
@@ -83,7 +85,7 @@ export const getEmployeeById = async (id) => {
 // Create a new employee
 export const addEmployee = async (employeeData) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/employees`, employeeData);
+    const response = await axios.post(`${API_BASE_URL}/api/Employees`, employeeData);
     return response.data;
   } catch (error) {
     console.error('Error creating employee:', error);
@@ -94,7 +96,7 @@ export const addEmployee = async (employeeData) => {
 // Update an existing employee
 export const updateEmployee = async (id, employeeData) => {
   try {
-    const response = await axios.put(`${API_BASE_URL}/employees/${id}`, employeeData);
+    const response = await axios.put(`${API_BASE_URL}/api/Employees/employee`, employeeData);
     return response.data;
   } catch (error) {
     console.error('Error updating employee:', error);
@@ -105,7 +107,7 @@ export const updateEmployee = async (id, employeeData) => {
 // Delete an employee
 export const deleteEmployee = async (id) => {
   try {
-    await axios.delete(`${API_BASE_URL}/employees/${id}`);
+    await axios.delete(`${API_BASE_URL}/api/Employees/employee/${id}`);
   } catch (error) {
     console.error('Error deleting employee:', error);
     throw error;
