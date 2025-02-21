@@ -96,7 +96,7 @@ export const addEmployee = async (employeeData) => {
 // Update an existing employee
 export const updateEmployee = async (id, employeeData) => {
   try {
-    const response = await axios.put(`${API_BASE_URL}/api/Employees/employee`, employeeData);
+    const response = await axios.put(`${API_BASE_URL}/api/Employees/${id}`, employeeData);
     return response.data;
   } catch (error) {
     console.error('Error updating employee:', error);
@@ -107,7 +107,7 @@ export const updateEmployee = async (id, employeeData) => {
 // Delete an employee
 export const deleteEmployee = async (id) => {
   try {
-    await axios.delete(`${API_BASE_URL}/api/Employees/employee/${id}`);
+    await axios.delete(`${API_BASE_URL}/api/Employees/${id}`);
   } catch (error) {
     console.error('Error deleting employee:', error);
     throw error;

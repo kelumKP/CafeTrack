@@ -6,26 +6,26 @@ import EmployeeCard from '../components/EmployeeCard';
 
 const Employees = () => {
   const [employees, setEmployees] = useState([]);
-  const [cafeFilter, setCafeFilter] = useState(''); // State to store cafe filter
+  const [filter, setFilter] = useState({ cafe: '', id: '' }); // State to store cafe filter
   const [idFilter, setIdFilter] = useState(''); // State to store ID filter
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (idFilter) {
-      fetchEmployeeById();
-    } else {
-      fetchEmployees();
-    }
-  }, [cafeFilter, idFilter]); // Re-fetch employees when either cafeFilter or idFilter changes
-
+    fetchEmployees();
+  }, [filter]);
+  
+  
   const fetchEmployees = async () => {
-    if (cafeFilter) {
-      const data = await getEmployeesByCafe(cafeFilter); // Fetch employees based on cafe filter
-      setEmployees(data);
-    } else {
-      setEmployees([]); // Handle case where no filter is set (optional)
+    let data = [];
+    if (filter.id) {
+      const employee = await getEmployeeById(filter.id);
+      data = employee ? [employee] : []; // Convert to array
+    } else if (filter.cafe) {
+      data = await getEmployeesByCafe(filter.cafe);
     }
+    setEmployees(data);
   };
+  
 
   const fetchEmployeeById = async () => {
     if (idFilter) {
@@ -40,11 +40,11 @@ const Employees = () => {
   };
 
   const handleCafeFilterChange = (event) => {
-    setCafeFilter(event.target.value); // Update cafe filter
+    setFilter({ ...filter, cafe: event.target.value, id: '' }); // Corrected state update
   };
 
   const handleIdFilterChange = (event) => {
-    setIdFilter(event.target.value); // Update ID filter
+    setFilter({ ...filter, id: event.target.value, cafe: '' }); // Update filter.id
   };
 
   return (
@@ -52,22 +52,21 @@ const Employees = () => {
       <Button onClick={() => navigate('/add-employee')}>Add New Employee</Button>
       
       <TextField
-        label="Filter by Cafe"
-        value={cafeFilter}
-        onChange={handleCafeFilterChange} // Allow user to input cafe filter
-        variant="outlined"
-        fullWidth
-        margin="normal"
-      />
-
-      <TextField
-        label="Filter by Employee ID"
-        value={idFilter}
-        onChange={handleIdFilterChange} // Allow user to input employee ID
-        variant="outlined"
-        fullWidth
-        margin="normal"
-      />
+  label="Filter by Employee ID"
+  value={filter.id}
+  onChange={(e) => setFilter({ ...filter, id: e.target.value, cafe: '' })}
+  variant="outlined"
+  fullWidth
+  margin="normal"
+/>
+<TextField
+  label="Filter by Cafe"
+  value={filter.cafe}
+  onChange={(e) => setFilter({ ...filter, cafe: e.target.value, id: '' })}
+  variant="outlined"
+  fullWidth
+  margin="normal"
+/>
 
       <div>
         {employees.map((employee) => (
