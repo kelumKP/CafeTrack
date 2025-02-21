@@ -9,10 +9,10 @@ const Header = () => {
     <AppBar position="static">
       <Toolbar>
         <Typography variant="h6" sx={{ flexGrow: 1 }}>
-          Café Management
+          Cafe Management
         </Typography>
         <Button color="inherit" onClick={() => navigate('/cafes')}>
-          Cafés
+          Cafes
         </Button>
         <Button color="inherit" onClick={() => navigate('/employees')}>
           Employees
