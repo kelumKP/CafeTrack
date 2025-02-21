@@ -37,7 +37,7 @@ const AddEditCafe = () => {
       <TextField label="Name" value={name} onChange={(e) => setName(e.target.value)} fullWidth />
       <TextField label="Description" value={description} onChange={(e) => setDescription(e.target.value)} fullWidth />
       <TextField label="Location" value={location} onChange={(e) => setLocation(e.target.value)} fullWidth />
-      <Button onClick={handleSubmit}>{id ? 'Update Café' : 'Add Café'}</Button>
+      <Button onClick={handleSubmit}>{id ? 'Update Cafe' : 'Add Cafe'}</Button>
     </div>
   );
 };

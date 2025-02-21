@@ -33,7 +33,7 @@ const Cafes = () => {
         value={locationFilter}
         onChange={(e) => setLocationFilter(e.target.value)}
       />
-      <Button onClick={() => navigate('/add-cafe')}>Add New Café</Button>
+      <Button onClick={() => navigate('/add-cafe')}>Add New Cafe</Button>
       <div>
         {cafes.map((cafe) => (
           <CafeCard key={cafe.id} cafe={cafe} onEdit={() => navigate(`/edit-cafe/${cafe.id}`)} onDelete={handleDelete} />

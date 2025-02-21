@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API_BASE_URL = 'https://localhost:7199'; // Replace with your actual API URL
 
-// Fetch all cafés with optional location filtering
+// Fetch all cafes with optional location filtering
 export const getCafes = async (locationFilter = '') => {
   try {
     const response = await axios.get(`${API_BASE_URL}/api/Cafe`, {  // Changed here to match backend route
@@ -15,45 +15,45 @@ export const getCafes = async (locationFilter = '') => {
   }
 };
 
-// Fetch a single café by ID
+// Fetch a single cafe by ID
 export const getCafeById = async (id) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/api/Cafe/${id}`);  // Changed here to match backend route
     return response.data;
   } catch (error) {
-    console.error('Error fetching café:', error);
+    console.error('Error fetching cafe:', error);
     return null;
   }
 };
 
-// Create a new café
+// Create a new cafe
 export const addCafe = async (cafeData) => {
   try {
     const response = await axios.post(`${API_BASE_URL}/api/Cafe`, cafeData);  // Changed here to match backend route
     return response.data;
   } catch (error) {
-    console.error('Error creating café:', error);
+    console.error('Error creating cafe:', error);
     throw error;
   }
 };
 
-// Update an existing café
+// Update an existing cafe
 export const updateCafe = async (id, cafeData) => {
   try {
     const response = await axios.put(`${API_BASE_URL}/api/Cafe/${id}`, cafeData);  // Changed here to match backend route
     return response.data;
   } catch (error) {
-    console.error('Error updating café:', error);
+    console.error('Error updating cafe:', error);
     throw error;
   }
 };
 
-// Delete a café
+// Delete a cafe
 export const deleteCafe = async (id) => {
   try {
     await axios.delete(`${API_BASE_URL}/api/Cafe/${id}`);  // Changed here to match backend route
   } catch (error) {
-    console.error('Error deleting café:', error);
+    console.error('Error deleting cafe:', error);
     throw error;
   }
 };

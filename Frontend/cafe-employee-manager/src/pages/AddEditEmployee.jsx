@@ -36,7 +36,7 @@ const AddEditEmployee = () => {
     <div>
       <TextField label="Name" value={name} onChange={(e) => setName(e.target.value)} fullWidth />
       <TextField label="Role" value={role} onChange={(e) => setRole(e.target.value)} fullWidth />
-      <TextField label="Café" value={cafe} onChange={(e) => setCafe(e.target.value)} fullWidth />
+      <TextField label="Cafe" value={cafe} onChange={(e) => setCafe(e.target.value)} fullWidth />
       <Button onClick={handleSubmit}>{id ? 'Update Employee' : 'Add Employee'}</Button>
     </div>
   );

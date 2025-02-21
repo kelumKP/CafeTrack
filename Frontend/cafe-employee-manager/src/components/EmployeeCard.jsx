@@ -8,7 +8,7 @@ const EmployeeCard = ({ employee, onEdit, onDelete }) => {
         <Typography variant="h6">{employee.name}</Typography>
         <Typography variant="body2">{employee.role}</Typography>
         <Typography variant="body2" color="textSecondary">
-          Café: {employee.cafe}
+          Cafe: {employee.cafe}
         </Typography>
         <Button onClick={() => onEdit(employee.id)}>Edit</Button>
         <Button onClick={() => onDelete(employee.id)} color="error">
