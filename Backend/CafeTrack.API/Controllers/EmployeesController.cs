@@ -66,7 +66,6 @@ namespace CafeTrack.API.Controllers
         [HttpPut("employee/{id}")]
         public async Task<IActionResult> UpdateEmployee(string id, [FromBody] UpdateEmployeeCommand command)
         {
-            command.Id = id; // Ensure the ID is set in the command
             var result = await _mediator.Send(command);
 
             if (result == null)

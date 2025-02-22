@@ -36,12 +36,14 @@ const AddEditEmployee = () => {
 
   const handleSubmit = async () => {
     const employeeData = {
-      Id: id || "", // Include Id (can be empty for new employees)
-      Name: name,
-      EmailAddress: emailAddress,
-      PhoneNumber: phoneNumber,
-      Gender: gender,
-      CafeId: cafeId || null, // Include CafeId (can be null)
+      Employee: {
+        Id: id || "", // Include Id (can be empty for new employees)
+        Name: name,
+        EmailAddress: emailAddress,
+        PhoneNumber: phoneNumber,
+        Gender: gender,
+        CafeId: cafeId || null, // Include CafeId (can be null)
+      },
     };
   
     try {

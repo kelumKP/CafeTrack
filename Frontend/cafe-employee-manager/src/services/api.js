@@ -126,7 +126,7 @@ export const updateEmployee = async (id, employeeData) => {
     const response = await axios.put(`${API_BASE_URL}/api/Employees/employee/${id}`, employeeData);
     return response.data;
   } catch (error) {
-    console.error('Error updating employee:', error);
+    console.error('Error updating employee:', error.response?.data || error.message);
     throw error;
   }
 };

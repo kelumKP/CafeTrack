@@ -5,60 +5,73 @@ using CafeTrack.Infrastructure.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-public class UpdateEmployeeCommandHandler : IRequestHandler<UpdateEmployeeCommand, EmployeeDto>
+
+namespace CafeTrack.Application.Features.Employees.Commands
 {
-    private readonly AppDbContext _context;
-
-    public UpdateEmployeeCommandHandler(AppDbContext context)
+    public class UpdateEmployeeCommandHandler : IRequestHandler<UpdateEmployeeCommand, EmployeeDto>
     {
-        _context = context;
-    }
+        private readonly AppDbContext _context;
 
-    public async Task<EmployeeDto> Handle(UpdateEmployeeCommand request, CancellationToken cancellationToken)
-    {
-        var employee = await _context.Employees
-            .Include(e => e.EmployeeCafes)
-            .FirstOrDefaultAsync(e => e.Id == request.Id, cancellationToken);
-
-        if (employee == null)
+        public UpdateEmployeeCommandHandler(AppDbContext context)
         {
-            return null;
+            _context = context;
         }
 
-        employee.Name = request.Employee.Name;
-        employee.EmailAddress = request.Employee.EmailAddress;
-        employee.PhoneNumber = request.Employee.PhoneNumber;
-        employee.Gender = request.Employee.Gender;
-
-        if (!string.IsNullOrEmpty(request.CafeId))
+        public async Task<EmployeeDto> Handle(UpdateEmployeeCommand request, CancellationToken cancellationToken)
         {
-            var currentCafeAssociation = employee.EmployeeCafes
-                .FirstOrDefault(ec => ec.CafeId == Guid.Parse(request.CafeId));
+            // Fetch the employee along with the EmployeeCafes relationship
+            var employee = await _context.Employees
+                .Include(e => e.EmployeeCafes)
+                .FirstOrDefaultAsync(e => e.Id == request.Employee.Id, cancellationToken);
 
-            if (currentCafeAssociation != null)
+            if (employee == null)
             {
-                _context.EmployeeCafes.Remove(currentCafeAssociation);
+                return null; // Employee not found
             }
 
-            var newCafeAssociation = new EmployeeCafe
+            // Update the employee details
+            employee.Name = request.Employee.Name;
+            employee.EmailAddress = request.Employee.EmailAddress;
+            employee.PhoneNumber = request.Employee.PhoneNumber;
+            employee.Gender = request.Employee.Gender;
+
+            // If a new CafeId is provided, manage the cafe association
+            if (!string.IsNullOrEmpty(request.Employee.CafeId))
             {
-                EmployeeId = employee.Id,
-                CafeId = Guid.Parse(request.CafeId)
+                // Find the EmployeeCafe association to check if the Employee is already associated with the given CafeId
+                var currentCafeAssociation = employee.EmployeeCafes
+                    .FirstOrDefault(ec => ec.CafeId == Guid.Parse(request.Employee.CafeId));
+
+                if (currentCafeAssociation != null)
+                {
+                    // If the association exists, remove it
+                    _context.EmployeeCafes.Remove(currentCafeAssociation);
+                }
+
+                // Add new cafe association (if provided)
+                var newCafeAssociation = new EmployeeCafe
+                {
+                    EmployeeId = employee.Id,  // Use the employee's Id
+                    CafeId = Guid.Parse(request.Employee.CafeId)  // Parse the CafeId from request.Employee
+                };
+
+                _context.EmployeeCafes.Add(newCafeAssociation);  // Add the new association
+            }
+
+            // Save the changes to the database
+            await _context.SaveChangesAsync(cancellationToken);
+
+            // Map Employee to EmployeeDto
+            return new EmployeeDto
+            {
+                Id = employee.Id,
+                Name = employee.Name,
+                EmailAddress = employee.EmailAddress,
+                PhoneNumber = employee.PhoneNumber,
+                Gender = employee.Gender,
+                CafeId = request.Employee.CafeId,  // Include the CafeId in the response
             };
-
-            _context.EmployeeCafes.Add(newCafeAssociation);
         }
-
-        await _context.SaveChangesAsync(cancellationToken);
-
-        return new EmployeeDto
-        {
-            Id = employee.Id,
-            Name = employee.Name,
-            EmailAddress = employee.EmailAddress,
-            PhoneNumber = employee.PhoneNumber,
-            Gender = employee.Gender,
-        };
     }
-}
 
+}
