@@ -43,6 +43,7 @@ namespace CafeTrack.Application
             services.AddScoped<IRequestHandler<DeleteCafeCommand, bool>, DeleteCafeCommandHandler>();
             services.AddScoped<IRequestHandler<UpdateCafeCommand, bool>, UpdateCafeCommandHandler>();
             services.AddScoped<IRequestHandler<GetCafesByLocationQuery, List<CafeDto>>, GetCafesByLocationQueryHandler>();
+            services.AddScoped<IRequestHandler<GetCafeByIdQuery, CafeDto>, GetCafeByIdQueryHandler>();
 
             services.AddScoped<IRequestHandler<CreateEmployeeCommand, EmployeeDto>, CreateEmployeeCommandHandler>();
             services.AddScoped<IRequestHandler<DeleteEmployeeCommand, bool>, DeleteEmployeeCommandHandler>();

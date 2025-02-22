@@ -36,14 +36,31 @@ namespace CafeTrack.API.Controllers
             return CreatedAtAction(nameof(GetCafes), new { id = result.Id }, result);
         }
 
-        [HttpPut("cafe")]
-        public async Task<IActionResult> UpdateCafe([FromBody] UpdateCafeCommand command)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<CafeDto>> GetCafeById(Guid id)
         {
+            var query = new GetCafeByIdQuery { Id = id };
+            var result = await _mediator.Send(query);
+
+            if (result == null)
+            {
+                return NotFound(); // Return 404 if the cafe doesn't exist
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPut("cafe/{id}")]
+        public async Task<IActionResult> UpdateCafe(Guid id, [FromBody] UpdateCafeCommand command)
+        {
+            command.Id = id; // Ensure the ID is set in the command
             var result = await _mediator.Send(command);
+
             if (!result)
             {
                 return NotFound(); // Return 404 if the café doesn't exist
             }
+
             return NoContent(); // Return 204 if update was successful
         }
 

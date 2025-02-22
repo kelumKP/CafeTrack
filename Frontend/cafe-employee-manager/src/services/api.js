@@ -18,7 +18,7 @@ export const getCafes = async (locationFilter = '') => {
 // Fetch a single cafe by ID
 export const getCafeById = async (id) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/api/Cafe/${id}`);  // Changed here to match backend route
+    const response = await axios.get(`${API_BASE_URL}/api/Cafe/${id}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching cafe:', error);
@@ -52,7 +52,7 @@ export const addCafe = async (cafeData) => {
 // Update an existing cafe
 export const updateCafe = async (id, cafeData) => {
   try {
-    const response = await axios.put(`${API_BASE_URL}/api/Cafe/cafe/${id}`, cafeData);  // Changed here to match backend route
+    const response = await axios.put(`${API_BASE_URL}/api/Cafe/cafe/${id}`, cafeData);
     return response.data;
   } catch (error) {
     console.error('Error updating cafe:', error);
