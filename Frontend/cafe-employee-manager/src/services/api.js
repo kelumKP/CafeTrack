@@ -52,7 +52,7 @@ export const addCafe = async (cafeData) => {
 // Update an existing cafe
 export const updateCafe = async (id, cafeData) => {
   try {
-    const response = await axios.put(`${API_BASE_URL}/api/Cafe/${id}`, cafeData);  // Changed here to match backend route
+    const response = await axios.put(`${API_BASE_URL}/api/Cafe/cafe/${id}`, cafeData);  // Changed here to match backend route
     return response.data;
   } catch (error) {
     console.error('Error updating cafe:', error);
@@ -63,7 +63,7 @@ export const updateCafe = async (id, cafeData) => {
 // Delete a cafe
 export const deleteCafe = async (id) => {
   try {
-    await axios.delete(`${API_BASE_URL}/api/Cafe/${id}`);  // Changed here to match backend route
+    await axios.delete(`${API_BASE_URL}/api/Cafe/cafe/${id}`);
   } catch (error) {
     console.error('Error deleting cafe:', error);
     throw error;
