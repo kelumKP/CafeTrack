@@ -30,7 +30,7 @@ namespace CafeTrack.API.Controllers
         }
 
         [HttpPost("cafe")]
-        public async Task<IActionResult> CreateCafe([FromBody] CreateCafeCommand command)
+        public async Task<IActionResult> CreateCafe([FromForm] CreateCafeCommand command)
         {
             var result = await _mediator.Send(command);
             return CreatedAtAction(nameof(GetCafes), new { id = result.Id }, result);

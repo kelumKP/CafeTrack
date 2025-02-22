@@ -2,6 +2,9 @@ using CafeTrack.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Register IWebHostEnvironment
+builder.Services.AddSingleton<IWebHostEnvironment>(builder.Environment);
+
 // Register Application layer dependencies
 builder.Services.AddApplication(builder.Configuration);
 

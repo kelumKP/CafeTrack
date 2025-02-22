@@ -7,6 +7,7 @@
         public string Description { get; set; }
         public string? Logo { get; set; }
         public string Location { get; set; }
+
         public ICollection<EmployeeCafe> EmployeeCafes { get; set; } = new List<EmployeeCafe>();
     }
 }

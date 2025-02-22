@@ -29,11 +29,23 @@ export const getCafeById = async (id) => {
 // Create a new cafe
 export const addCafe = async (cafeData) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/api/Cafe`, cafeData);  // Changed here to match backend route
+    const formData = new FormData();
+    formData.append('name', cafeData.name);
+    formData.append('description', cafeData.description);
+    formData.append('location', cafeData.location);
+    if (cafeData.logo) {
+      formData.append('logo', cafeData.logo); // Append the logo file
+    }
+
+    const response = await axios.post(`${API_BASE_URL}/api/Cafe/cafe`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data', // Set the correct Content-Type
+      },
+    });
     return response.data;
   } catch (error) {
     console.error('Error creating cafe:', error);
-    throw error;
+    throw new Error(error.response?.data?.message || 'Failed to create cafe.');
   }
 };
 
