@@ -5,7 +5,7 @@ const API_BASE_URL = 'https://localhost:7199'; // Replace with your actual API U
 // Fetch all cafes with optional location filtering
 export const getCafes = async (locationFilter = '') => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/api/Cafe`, {  // Changed here to match backend route
+    const response = await axios.get(`${API_BASE_URL}/api/Cafe`, {
       params: { location: locationFilter },
     });
     return response.data;
@@ -74,7 +74,7 @@ export const deleteCafe = async (id) => {
 export const getEmployeesByCafe = async (cafe) => {
   try {
     const response = await axios.get(`${API_BASE_URL}/api/Employees`, {
-      params: { cafe },  // Passing the cafe string as a query parameter
+      params: { cafe }, // Passing the cafe string as a query parameter
     });
     return response.data;
   } catch (error) {
@@ -97,18 +97,33 @@ export const getEmployeeById = async (id) => {
 // Create a new employee
 export const addEmployee = async (employeeData) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/api/Employees`, employeeData);
+    const payload = {
+      Employee: {
+        Id: employeeData.Id || "", // Include Id (can be empty for new employees)
+        Name: employeeData.Name,
+        EmailAddress: employeeData.EmailAddress,
+        PhoneNumber: employeeData.PhoneNumber,
+        Gender: employeeData.Gender,
+        CafeId: employeeData.CafeId || null, // Include CafeId (can be null)
+      },
+    };
+
+    const response = await axios.post(`${API_BASE_URL}/api/Employees/employee`, payload, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     return response.data;
   } catch (error) {
-    console.error('Error creating employee:', error);
-    throw error;
+    console.error('Error creating employee:', error.response?.data || error.message);
+    throw new Error(error.response?.data?.message || 'Failed to create employee.');
   }
 };
 
 // Update an existing employee
 export const updateEmployee = async (id, employeeData) => {
   try {
-    const response = await axios.put(`${API_BASE_URL}/api/Employees/${id}`, employeeData);
+    const response = await axios.put(`${API_BASE_URL}/api/Employees/employee/${id}`, employeeData);
     return response.data;
   } catch (error) {
     console.error('Error updating employee:', error);
@@ -119,7 +134,7 @@ export const updateEmployee = async (id, employeeData) => {
 // Delete an employee
 export const deleteEmployee = async (id) => {
   try {
-    await axios.delete(`${API_BASE_URL}/api/Employees/${id}`);
+    await axios.delete(`${API_BASE_URL}/api/Employees/employee/${id}`);
   } catch (error) {
     console.error('Error deleting employee:', error);
     throw error;

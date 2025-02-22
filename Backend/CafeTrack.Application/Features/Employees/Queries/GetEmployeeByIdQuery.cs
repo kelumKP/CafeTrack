@@ -3,7 +3,7 @@ using MediatR;
 
 namespace CafeTrack.Application.Features.Employees.Queries
 {
-    public class GetEmployeeQuery : IRequest<EmployeeDto>
+    public class GetEmployeeByIdQuery : IRequest<EmployeeDto>
     {
         public string Id { get; set; }
     }

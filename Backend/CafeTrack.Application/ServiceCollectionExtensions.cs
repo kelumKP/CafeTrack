@@ -3,6 +3,7 @@ using CafeTrack.Application.Features.Cafes.Commands;
 using CafeTrack.Application.Features.Cafes.Queries;
 using CafeTrack.Application.Features.Employees.Commands;
 using CafeTrack.Application.Features.Employees.Queries;
+using CafeTrack.Application.Mappings;
 using CafeTrack.Application.Validators;
 using CafeTrack.Infrastructure.Data;
 using FluentValidation;
@@ -24,6 +25,10 @@ namespace CafeTrack.Application
         }
         public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            // Register AutoMapper
+            services.AddAutoMapper(typeof(EmployeeProfile).Assembly);
+
             // Register Infrastructure layer dependencies
             services.AddInfrastructure(configuration);
 
@@ -49,7 +54,7 @@ namespace CafeTrack.Application
             services.AddScoped<IRequestHandler<DeleteEmployeeCommand, bool>, DeleteEmployeeCommandHandler>();
             services.AddScoped<IRequestHandler<UpdateEmployeeCommand, EmployeeDto>, UpdateEmployeeCommandHandler>();
             services.AddScoped<IRequestHandler<GetEmployeesByCafeQuery, List<EmployeeDto>>, GetEmployeesByCafeQueryHandler>();
-            services.AddScoped<IRequestHandler<GetEmployeesQuery, List<EmployeeDto>>, GetEmployeesQueryHandler>();
+            services.AddScoped<IRequestHandler<GetEmployeeByIdQuery, EmployeeDto>, GetEmployeeByIdQueryHandler>();
 
             return services;
         }

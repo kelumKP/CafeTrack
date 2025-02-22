@@ -1,11 +1,9 @@
 ﻿using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using CafeTrack.Core.Entities;
 using CafeTrack.Application.Features.Employees.Commands;
 using CafeTrack.Application.Features.Employees.Queries;
 using CafeTrack.Application.DTOs;
-using CafeTrack.Application.Validators;
 
 namespace CafeTrack.API.Controllers
 {
@@ -24,25 +22,23 @@ namespace CafeTrack.API.Controllers
 
         // --- Employee CRUD Operations ---
 
-        // Create Employee
-        [HttpPost]
-        public async Task<IActionResult> CreateEmployee([FromBody] CreateEmployeeCommand command)
+        // Get Employees
+        [HttpGet]
+        public async Task<IActionResult> GetEmployees([FromQuery] string? cafe)
         {
-            var validationResult = await ValidateEmployeeDtoAsync(command.Employee);
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(validationResult.Errors);
-            }
+            var query = new GetEmployeesByCafeQuery { CafeName = cafe };
+            var employees = await _mediator.Send(query);
 
-            var result = await _mediator.Send(command);
-            return CreatedAtAction(nameof(GetEmployee), new { id = result.Id }, result);
+            var sortedEmployees = employees.OrderByDescending(emp => emp.DaysWorked).ToList();
+            return Ok(sortedEmployees);
         }
 
         // Get Employee by ID
         [HttpGet("{id}")]
         public async Task<IActionResult> GetEmployee(string id)
         {
-            var employee = await _mediator.Send(new GetEmployeeQuery { Id = id });
+            var query = new GetEmployeeByIdQuery { Id = id };
+            var employee = await _mediator.Send(query);
 
             if (employee == null)
             {
@@ -52,31 +48,37 @@ namespace CafeTrack.API.Controllers
             return Ok(employee);
         }
 
-        // Get Employees by Cafe
-        [HttpGet]
-        public async Task<IActionResult> GetEmployeesByCafe([FromQuery] string cafe)
+        // Create Employee
+        [HttpPost("employee")]
+        public async Task<IActionResult> CreateEmployee([FromBody] CreateEmployeeCommand command)
         {
-            var query = new GetEmployeesByCafeQuery { CafeName = cafe };
-            var employees = await _mediator.Send(query);
+            var validationResult = await _employeeDtoValidator.ValidateAsync(command.Employee);
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
 
-            var sortedEmployees = employees.OrderByDescending(emp => emp.DaysWorked).ToList();
-            return Ok(sortedEmployees);
+            var result = await _mediator.Send(command);
+            return CreatedAtAction(nameof(GetEmployee), new { id = result.Id }, result);
         }
 
         // Update Employee
-        [HttpPut("{id}")]
+        [HttpPut("employee/{id}")]
         public async Task<IActionResult> UpdateEmployee(string id, [FromBody] UpdateEmployeeCommand command)
         {
+            command.Id = id; // Ensure the ID is set in the command
             var result = await _mediator.Send(command);
+
             if (result == null)
             {
                 return NotFound();
             }
+
             return NoContent();
         }
 
         // Delete Employee
-        [HttpDelete("{id}")]
+        [HttpDelete("employee/{id}")]
         public async Task<IActionResult> DeleteEmployee(string id)
         {
             var command = new DeleteEmployeeCommand { Id = id };
@@ -88,13 +90,6 @@ namespace CafeTrack.API.Controllers
             }
 
             return NoContent();
-        }
-
-        // --- Private Helper Methods ---
-
-        private async Task<FluentValidation.Results.ValidationResult> ValidateEmployeeDtoAsync(EmployeeDto employeeDto)
-        {
-            return await _employeeDtoValidator.ValidateAsync(employeeDto);
         }
     }
 }

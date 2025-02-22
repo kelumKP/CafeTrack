@@ -3,9 +3,11 @@ using CafeTrack.Core.Entities;
 using CafeTrack.Infrastructure.Data;
 using FluentValidation;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace CafeTrack.Application.Features.Employees.Commands
 {
+    // CreateEmployeeCommandHandler
     public class CreateEmployeeCommandHandler : IRequestHandler<CreateEmployeeCommand, EmployeeDto>
     {
         private readonly IValidator<EmployeeDto> _employeeValidator;
@@ -19,40 +21,50 @@ namespace CafeTrack.Application.Features.Employees.Commands
 
         public async Task<EmployeeDto> Handle(CreateEmployeeCommand request, CancellationToken cancellationToken)
         {
-            // Validate the employee data using FluentValidation
             var validationResult = await _employeeValidator.ValidateAsync(request.Employee, cancellationToken);
             if (!validationResult.IsValid)
             {
-                // Handle validation failure by throwing an exception
                 throw new ValidationException(validationResult.Errors);
             }
 
-            // Proceed with creating the employee if validation is successful
+            // Create the employee
             var employee = new Employee
             {
-                Id = request.Employee.Id,  // Handle the Id (may be auto-generated)
+                Id = Guid.NewGuid().ToString(), // Generate a new GUID for the Id
                 Name = request.Employee.Name,
                 EmailAddress = request.Employee.EmailAddress,
                 PhoneNumber = request.Employee.PhoneNumber,
                 Gender = request.Employee.Gender,
-                StartDate = DateTime.UtcNow,  // Example for setting start date
+                StartDate = DateTime.UtcNow,
             };
 
+            // Add the employee to the database
             _context.Employees.Add(employee);
+
+            // If a CafeId is provided, create the EmployeeCafe relationship
+            if (!string.IsNullOrEmpty(request.Employee.CafeId))
+            {
+                var employeeCafe = new EmployeeCafe
+                {
+                    EmployeeId = employee.Id, // Use the employee's Id
+                    CafeId = Guid.Parse(request.Employee.CafeId), // Parse the CafeId from the request
+                };
+
+                _context.EmployeeCafes.Add(employeeCafe); // Add the relationship to the database
+            }
+
             await _context.SaveChangesAsync(cancellationToken);
 
-            // Map to EmployeeDto
-            var employeeDto = new EmployeeDto
+            // Map Employee to EmployeeDto
+            return new EmployeeDto
             {
                 Id = employee.Id,
                 Name = employee.Name,
                 EmailAddress = employee.EmailAddress,
                 PhoneNumber = employee.PhoneNumber,
                 Gender = employee.Gender,
-                DaysWorked = employee.EmployeeCafes.Count  // Example calculation
+                CafeId = request.Employee.CafeId, // Include the CafeId in the response
             };
-
-            return employeeDto;
         }
     }
 
