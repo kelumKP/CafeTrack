@@ -26,6 +26,7 @@ namespace CafeTrack.Application.Features.Cafes.Commands
             }
 
             // Update cafe properties
+            cafe.Id = request.Id;
             cafe.Name = request.Name;
             cafe.Description = request.Description;
             cafe.Logo = request.Logo;
@@ -33,15 +34,6 @@ namespace CafeTrack.Application.Features.Cafes.Commands
 
             // Remove current employees' associations
             _context.EmployeeCafes.RemoveRange(cafe.EmployeeCafes);
-
-            // Add new employee associations
-            var newAssociations = request.EmployeeIds.Select(employeeId => new EmployeeCafe
-            {
-                EmployeeId = employeeId.ToString(),  // Ensure employeeId is a string here
-                CafeId = cafe.Id
-            }).ToList();
-
-            await _context.EmployeeCafes.AddRangeAsync(newAssociations, cancellationToken);
 
             await _context.SaveChangesAsync(cancellationToken);
             return true; // Return true if the update was successful

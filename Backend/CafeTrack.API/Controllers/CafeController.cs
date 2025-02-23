@@ -29,7 +29,7 @@ namespace CafeTrack.API.Controllers
             return Ok(sortedResult);
         }
 
-        [HttpPost("cafe")]
+        [HttpPost("createCafe")]
         public async Task<IActionResult> CreateCafe([FromForm] CreateCafeCommand command)
         {
             var result = await _mediator.Send(command);
@@ -50,10 +50,9 @@ namespace CafeTrack.API.Controllers
             return Ok(result);
         }
 
-        [HttpPut("cafe/{id}")]
-        public async Task<IActionResult> UpdateCafe(Guid id, [FromBody] UpdateCafeCommand command)
+        [HttpPut("updateCafe")]
+        public async Task<IActionResult> UpdateCafe([FromForm] UpdateCafeCommand command)
         {
-            command.Id = id; // Ensure the ID is set in the command
             var result = await _mediator.Send(command);
 
             if (!result)

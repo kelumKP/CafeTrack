@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 
 namespace CafeTrack.Application.Features.Cafes.Commands
 {
@@ -7,8 +8,7 @@ namespace CafeTrack.Application.Features.Cafes.Commands
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string? Logo { get; set; }
+        public string? Logo { get; set; } // Ensure this is IFormFile
         public string Location { get; set; }
-        public List<Guid> EmployeeIds { get; set; } // List of employee IDs to associate with the cafe
     }
 }

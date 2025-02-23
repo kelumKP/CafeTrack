@@ -30,14 +30,14 @@ export const getCafeById = async (id) => {
 export const addCafe = async (cafeData) => {
   try {
     const formData = new FormData();
+    formData.append('id', cafeData.id);
     formData.append('name', cafeData.name);
     formData.append('description', cafeData.description);
     formData.append('location', cafeData.location);
-    if (cafeData.logo) {
+    if (cafeData.logo instanceof File) {
       formData.append('logo', cafeData.logo); // Append the logo file
     }
-
-    const response = await axios.post(`${API_BASE_URL}/api/Cafe/cafe`, formData, {
+    const response = await axios.post(`${API_BASE_URL}/api/Cafe/createCafe`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data', // Set the correct Content-Type
       },
@@ -50,9 +50,21 @@ export const addCafe = async (cafeData) => {
 };
 
 // Update an existing cafe
-export const updateCafe = async (id, cafeData) => {
+export const updateCafe = async (cafeData) => {
   try {
-    const response = await axios.put(`${API_BASE_URL}/api/Cafe/cafe/${id}`, cafeData);
+    const formData = new FormData();
+    formData.append('id', cafeData.id);
+    formData.append('name', cafeData.name);
+    formData.append('description', cafeData.description);
+    formData.append('location', cafeData.location);
+    if (cafeData.logo instanceof File) {
+      formData.append('logo', cafeData.logo); // Append the logo file
+    }
+    const response = await axios.put(`${API_BASE_URL}/api/Cafe/updateCafe`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data', // Set the correct Content-Type
+      },
+    });
     return response.data;
   } catch (error) {
     console.error('Error updating cafe:', error);

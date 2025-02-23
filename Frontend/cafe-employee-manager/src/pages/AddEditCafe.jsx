@@ -32,15 +32,15 @@ const AddEditCafe = () => {
 
   const handleSubmit = async () => {
     const cafeData = {
+      id: id || undefined,  
       name,
       description,
       location,
       logo,
-      employeeIds: [] // Add employee IDs if needed
     };
 
     if (id) {
-      await updateCafe(id, cafeData);
+      await updateCafe(cafeData);
     } else {
       await addCafe(cafeData);
     }
