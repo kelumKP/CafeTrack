@@ -101,8 +101,13 @@ export const getEmployeeById = async (id) => {
     const response = await axios.get(`${API_BASE_URL}/api/Employees/${id}`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching employee:', error);
-    return null;
+    if (error.response?.status === 404) {
+      console.warn('Employee not found:', error.message);
+      return null; // Return null if employee is not found
+    } else {
+      console.error('Error fetching employee:', error);
+      throw error; // Re-throw the error for other cases
+    }
   }
 };
 

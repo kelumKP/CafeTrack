@@ -9,24 +9,36 @@ const Employees = () => {
   const [filter, setFilter] = useState({ cafe: '', id: '' });
   const navigate = useNavigate();
 
+  // Fetch employees whenever the filter changes
   useEffect(() => {
     fetchEmployees();
   }, [filter]);
 
   const fetchEmployees = async () => {
     let data = [];
-    if (filter.id) {
-      const employee = await getEmployeeById(filter.id);
-      data = employee ? [employee] : [];
-    } else if (filter.cafe) {
-      data = await getEmployeesByCafe(filter.cafe);
+    try {
+      if (filter.id) {
+        const employee = await getEmployeeById(filter.id);
+        data = employee ? [employee] : [];
+      } else if (filter.cafe) {
+        data = await getEmployeesByCafe(filter.cafe);
+      }
+      setEmployees(data);
+    } catch (error) {
+      console.error('Error fetching employees:', error);
+      setEmployees([]); // Set employees to an empty array in case of an error
     }
-    setEmployees(data);
   };
 
   const handleDelete = async (id) => {
     await deleteEmployee(id);
-    fetchEmployees(); // Refresh the list after deletion
+
+    // Clear the filter.id if it matches the deleted employee's ID
+    if (filter.id === id) {
+      setFilter({ ...filter, id: '' }); // This will trigger the useEffect to call fetchEmployees
+    } else {
+      fetchEmployees(); // Refresh the list if the deleted employee is not the one being filtered
+    }
   };
 
   const handleCafeFilterChange = (event) => {
