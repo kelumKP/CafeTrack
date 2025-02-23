@@ -49,7 +49,7 @@ namespace CafeTrack.API.Controllers
         }
 
         // Create Employee
-        [HttpPost("employee")]
+        [HttpPost("createEmployee")]
         public async Task<IActionResult> CreateEmployee([FromBody] CreateEmployeeCommand command)
         {
             var validationResult = await _employeeDtoValidator.ValidateAsync(command.Employee);
@@ -63,8 +63,8 @@ namespace CafeTrack.API.Controllers
         }
 
         // Update Employee
-        [HttpPut("employee/{id}")]
-        public async Task<IActionResult> UpdateEmployee(string id, [FromBody] UpdateEmployeeCommand command)
+        [HttpPut("updateEmployee")]
+        public async Task<IActionResult> UpdateEmployee([FromBody] UpdateEmployeeCommand command)
         {
             var result = await _mediator.Send(command);
 

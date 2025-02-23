@@ -99,16 +99,16 @@ export const addEmployee = async (employeeData) => {
   try {
     const payload = {
       Employee: {
-        Id: employeeData.Id || "", // Include Id (can be empty for new employees)
+        Id: employeeData.Id || "", 
         Name: employeeData.Name,
         EmailAddress: employeeData.EmailAddress,
         PhoneNumber: employeeData.PhoneNumber,
         Gender: employeeData.Gender,
-        CafeId: employeeData.CafeId || null, // Include CafeId (can be null)
+        DaysWorked: employeeData.DaysWorked || 0,
+        CafeId: employeeData.CafeId || null,
       },
     };
-
-    const response = await axios.post(`${API_BASE_URL}/api/Employees/employee`, payload, {
+    const response = await axios.post(`${API_BASE_URL}/api/Employees/createEmployee`, payload, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -121,9 +121,24 @@ export const addEmployee = async (employeeData) => {
 };
 
 // Update an existing employee
-export const updateEmployee = async (id, employeeData) => {
+export const updateEmployee = async (employeeData) => {
   try {
-    const response = await axios.put(`${API_BASE_URL}/api/Employees/employee/${id}`, employeeData);
+    const payload = {
+      Employee: {
+        Id: employeeData.Id || "", 
+        Name: employeeData.Name,
+        EmailAddress: employeeData.EmailAddress,
+        PhoneNumber: employeeData.PhoneNumber,
+        Gender: employeeData.Gender,
+        DaysWorked: employeeData.DaysWorked || 0,
+        CafeId: employeeData.CafeId || null,
+      },
+    };
+    const response = await axios.put(`${API_BASE_URL}/api/Employees/updateEmployee`, payload, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
     return response.data;
   } catch (error) {
     console.error('Error updating employee:', error.response?.data || error.message);
