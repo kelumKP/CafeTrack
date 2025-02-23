@@ -19,7 +19,6 @@ namespace CafeTrack.Application.Features.Cafes.Commands
 
         public async Task<CafeDto> Handle(CreateCafeCommand request, CancellationToken cancellationToken)
         {
-            // Ensure the WebRootPath is not null
             if (string.IsNullOrEmpty(_env.WebRootPath))
             {
                 throw new InvalidOperationException("WebRootPath is not configured.");

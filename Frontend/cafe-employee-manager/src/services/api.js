@@ -2,173 +2,156 @@ import axios from 'axios';
 
 const API_BASE_URL = 'https://localhost:7199'; // Replace with your actual API URL
 
-// Fetch all cafes with optional location filtering
+// Create a reusable axios instance
+const apiClient = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Helper function to handle API errors
+const handleApiError = (error, context) => {
+  console.error(`Error ${context}:`, error.response?.data || error.message);
+  throw new Error(error.response?.data?.message || `Failed to ${context}.`);
+};
+
+// Helper function to create form data for cafe operations
+const createCafeFormData = (cafeData) => {
+  const formData = new FormData();
+  formData.append('id', cafeData.id);
+  formData.append('name', cafeData.name);
+  formData.append('description', cafeData.description);
+  formData.append('location', cafeData.location);
+  if (cafeData.logo instanceof File) {
+    formData.append('logo', cafeData.logo); // Append the logo file
+  }
+  return formData;
+};
+
+// Helper function to create employee payload
+const createEmployeePayload = (employeeData) => ({
+  Employee: {
+    Id: employeeData.Id || "",
+    Name: employeeData.Name,
+    EmailAddress: employeeData.EmailAddress,
+    PhoneNumber: employeeData.PhoneNumber,
+    Gender: employeeData.Gender,
+    DaysWorked: employeeData.DaysWorked || 0,
+    CafeId: employeeData.CafeId || null,
+  },
+});
+
+// Cafe-related functions
 export const getCafes = async (locationFilter = '') => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/api/Cafe`, {
+    const response = await apiClient.get('/api/Cafe', {
       params: { location: locationFilter },
     });
     return response.data;
   } catch (error) {
-    console.error('Error fetching cafes:', error);
-    return [];
+    return handleApiError(error, 'fetching cafes');
   }
 };
 
-// Fetch a single cafe by ID
 export const getCafeById = async (id) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/api/Cafe/${id}`);
+    const response = await apiClient.get(`/api/Cafe/${id}`);
     return response.data;
   } catch (error) {
-    console.error('Error fetching cafe:', error);
-    return null;
+    if (error.response?.status === 404) {
+      console.warn('Cafe not found:', error.message);
+      return null;
+    }
+    return handleApiError(error, 'fetching cafe');
   }
 };
 
-// Create a new cafe
 export const addCafe = async (cafeData) => {
   try {
-    const formData = new FormData();
-    formData.append('id', cafeData.id);
-    formData.append('name', cafeData.name);
-    formData.append('description', cafeData.description);
-    formData.append('location', cafeData.location);
-    if (cafeData.logo instanceof File) {
-      formData.append('logo', cafeData.logo); // Append the logo file
-    }
-    const response = await axios.post(`${API_BASE_URL}/api/Cafe/createCafe`, formData, {
+    const formData = createCafeFormData(cafeData);
+    const response = await apiClient.post('/api/Cafe/createCafe', formData, {
       headers: {
-        'Content-Type': 'multipart/form-data', // Set the correct Content-Type
+        'Content-Type': 'multipart/form-data',
       },
     });
     return response.data;
   } catch (error) {
-    console.error('Error creating cafe:', error);
-    throw new Error(error.response?.data?.message || 'Failed to create cafe.');
+    return handleApiError(error, 'creating cafe');
   }
 };
 
-// Update an existing cafe
 export const updateCafe = async (cafeData) => {
   try {
-    const formData = new FormData();
-    formData.append('id', cafeData.id);
-    formData.append('name', cafeData.name);
-    formData.append('description', cafeData.description);
-    formData.append('location', cafeData.location);
-    if (cafeData.logo instanceof File) {
-      formData.append('logo', cafeData.logo); // Append the logo file
-    }
-    const response = await axios.put(`${API_BASE_URL}/api/Cafe/updateCafe`, formData, {
+    const formData = createCafeFormData(cafeData);
+    const response = await apiClient.put('/api/Cafe/updateCafe', formData, {
       headers: {
-        'Content-Type': 'multipart/form-data', // Set the correct Content-Type
+        'Content-Type': 'multipart/form-data',
       },
     });
     return response.data;
   } catch (error) {
-    console.error('Error updating cafe:', error);
-    throw error;
+    return handleApiError(error, 'updating cafe');
   }
 };
 
-// Delete a cafe
 export const deleteCafe = async (id) => {
   try {
-    await axios.delete(`${API_BASE_URL}/api/Cafe/cafe/${id}`);
+    await apiClient.delete(`/api/Cafe/cafe/${id}`);
   } catch (error) {
-    console.error('Error deleting cafe:', error);
-    throw error;
+    return handleApiError(error, 'deleting cafe');
   }
 };
 
-// Fetch employees by Cafe
+// Employee-related functions
 export const getEmployeesByCafe = async (cafe) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/api/Employees`, {
-      params: { cafe }, // Passing the cafe string as a query parameter
+    const response = await apiClient.get('/api/Employees', {
+      params: { cafe },
     });
     return response.data;
   } catch (error) {
-    console.error('Error fetching employees by cafe:', error);
-    return [];
+    return handleApiError(error, 'fetching employees by cafe');
   }
 };
 
-// Fetch a single employee by ID
 export const getEmployeeById = async (id) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/api/Employees/${id}`);
+    const response = await apiClient.get(`/api/Employees/${id}`);
     return response.data;
   } catch (error) {
     if (error.response?.status === 404) {
       console.warn('Employee not found:', error.message);
-      return null; // Return null if employee is not found
-    } else {
-      console.error('Error fetching employee:', error);
-      throw error; // Re-throw the error for other cases
+      return null;
     }
+    return handleApiError(error, 'fetching employee');
   }
 };
 
-// Create a new employee
 export const addEmployee = async (employeeData) => {
   try {
-    const payload = {
-      Employee: {
-        Id: employeeData.Id || "", 
-        Name: employeeData.Name,
-        EmailAddress: employeeData.EmailAddress,
-        PhoneNumber: employeeData.PhoneNumber,
-        Gender: employeeData.Gender,
-        DaysWorked: employeeData.DaysWorked || 0,
-        CafeId: employeeData.CafeId || null,
-      },
-    };
-    const response = await axios.post(`${API_BASE_URL}/api/Employees/createEmployee`, payload, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    const payload = createEmployeePayload(employeeData);
+    const response = await apiClient.post('/api/Employees/createEmployee', payload);
     return response.data;
   } catch (error) {
-    console.error('Error creating employee:', error.response?.data || error.message);
-    throw new Error(error.response?.data?.message || 'Failed to create employee.');
+    return handleApiError(error, 'creating employee');
   }
 };
 
-// Update an existing employee
 export const updateEmployee = async (employeeData) => {
   try {
-    const payload = {
-      Employee: {
-        Id: employeeData.Id || "", 
-        Name: employeeData.Name,
-        EmailAddress: employeeData.EmailAddress,
-        PhoneNumber: employeeData.PhoneNumber,
-        Gender: employeeData.Gender,
-        DaysWorked: employeeData.DaysWorked || 0,
-        CafeId: employeeData.CafeId || null,
-      },
-    };
-    const response = await axios.put(`${API_BASE_URL}/api/Employees/updateEmployee`, payload, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    const payload = createEmployeePayload(employeeData);
+    const response = await apiClient.put('/api/Employees/updateEmployee', payload);
     return response.data;
   } catch (error) {
-    console.error('Error updating employee:', error.response?.data || error.message);
-    throw error;
+    return handleApiError(error, 'updating employee');
   }
 };
 
-// Delete an employee
 export const deleteEmployee = async (id) => {
   try {
-    await axios.delete(`${API_BASE_URL}/api/Employees/employee/${id}`);
+    await apiClient.delete(`/api/Employees/employee/${id}`);
   } catch (error) {
-    console.error('Error deleting employee:', error);
-    throw error;
+    return handleApiError(error, 'deleting employee');
   }
 };
