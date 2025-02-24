@@ -1,5 +1,4 @@
-﻿using CafeTrack.Core.Entities;
-using CafeTrack.Infrastructure.Data;
+﻿using CafeTrack.Infrastructure.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
