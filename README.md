@@ -1,4 +1,4 @@
-# Café Employee Management System
+# Cafe Employee Management System
 
 ## Overview
 
@@ -107,22 +107,29 @@ The frontend is a React-based application for managing cafés and employees. It 
 5. Create a pull request.
 
 ## UI 
-Landing Page
+
+**Landing Page**
+
 ![Landing Page](.//Frontend/cafe-employee-manager/photos/landing_page.png)
 
-Add New Cafe Page
+**Add New Cafe Page**
+
 ![Add New Cafe Page](.//Frontend/cafe-employee-manager/photos/add_new_cafe.png)
 
-Update Cafe Page
+**Update Cafe Page**
+
 ![Update Cafe Page](.//Frontend/cafe-employee-manager/photos/update_cafe_page.png)
 
-Employee Page
+**Employee Page**
+
 ![Employee Page](.//Frontend/cafe-employee-manager/photos/employee_page.png)
 
-Add New Employee Page
+**Add New Employee Page**
+
 ![Add New Employee Page](.//Frontend/cafe-employee-manager/photos/add_new_employee.png)
 
-Update Employee Page
+**Update Employee Page**
+
 ![Update Employee Page](.//Frontend/cafe-employee-manager/photos/update_employee.png)
 ---
 
