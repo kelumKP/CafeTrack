@@ -1,3 +1,5 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using CafeTrack.Application;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +12,14 @@ builder.Services.AddApplication(builder.Configuration);
 
 // Register DB connectionstring dependencies
 builder.Services.AddInfrastructure(builder.Configuration);
+
+// Add Autofac as the DI container
+builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory())
+    .ConfigureContainer<ContainerBuilder>(containerBuilder =>
+    {
+        // Register your modules here
+        containerBuilder.RegisterModule(new ApplicationModule());
+    });
 
 builder.Services.AddControllers();
 
@@ -26,9 +36,6 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
-
-
-
 
 // Optional: Seed data (this could also be part of Infrastructure)
 using (var scope = app.Services.CreateScope())

@@ -26,13 +26,12 @@ namespace CafeTrack.Application
         public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            // Register AutoMapper
             services.AddAutoMapper(typeof(EmployeeProfile).Assembly);
 
             // Register Infrastructure layer dependencies
             services.AddInfrastructure(configuration);
 
-            // Register MediatR handlers (you can use one call if all handlers are in one assembly)
+            // Register MediatR (Autofac will handle the rest)
             services.AddMediatR(cfg =>
             {
                 cfg.RegisterServicesFromAssemblyContaining<CreateCafeCommandHandler>();
@@ -42,19 +41,6 @@ namespace CafeTrack.Application
             // Register FluentValidation validators
             services.AddValidatorsFromAssemblyContaining<EmployeeDtoValidator>();
             services.AddValidatorsFromAssemblyContaining<CafeDtoValidator>();
-
-            // Optionally, explicitly register command & query handlers
-            services.AddScoped<IRequestHandler<CreateCafeCommand, CafeDto>, CreateCafeCommandHandler>();
-            services.AddScoped<IRequestHandler<DeleteCafeCommand, bool>, DeleteCafeCommandHandler>();
-            services.AddScoped<IRequestHandler<UpdateCafeCommand, bool>, UpdateCafeCommandHandler>();
-            services.AddScoped<IRequestHandler<GetCafesByLocationQuery, List<CafeDto>>, GetCafesByLocationQueryHandler>();
-            services.AddScoped<IRequestHandler<GetCafeByIdQuery, CafeDto>, GetCafeByIdQueryHandler>();
-
-            services.AddScoped<IRequestHandler<CreateEmployeeCommand, EmployeeDto>, CreateEmployeeCommandHandler>();
-            services.AddScoped<IRequestHandler<DeleteEmployeeCommand, bool>, DeleteEmployeeCommandHandler>();
-            services.AddScoped<IRequestHandler<UpdateEmployeeCommand, EmployeeDto>, UpdateEmployeeCommandHandler>();
-            services.AddScoped<IRequestHandler<GetEmployeesByCafeQuery, List<EmployeeDto>>, GetEmployeesByCafeQueryHandler>();
-            services.AddScoped<IRequestHandler<GetEmployeeByIdQuery, EmployeeDto>, GetEmployeeByIdQueryHandler>();
 
             return services;
         }
