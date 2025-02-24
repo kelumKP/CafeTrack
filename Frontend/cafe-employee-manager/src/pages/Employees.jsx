@@ -50,28 +50,30 @@ const Employees = () => {
   };
 
   return (
-    <div>
-      <Button onClick={() => navigate('/add-employee')} variant="contained" color="primary">
-        Add New Employee
-      </Button>
-
-      <TextField
-        label="Filter by Employee ID"
-        value={filter.id}
-        onChange={handleIdFilterChange}
-        variant="outlined"
-        fullWidth
-        margin="normal"
-      />
-      <TextField
-        label="Filter by Cafe"
-        value={filter.cafe}
-        onChange={handleCafeFilterChange}
-        variant="outlined"
-        fullWidth
-        margin="normal"
-      />
-
+    <div className="main-content">
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' }}>
+        <Button onClick={() => navigate('/add-employee')} variant="contained" color="primary">
+          Add New Employee
+        </Button>
+      </div>
+      <div style={{ marginBottom: '20px' }}>
+        <TextField
+          label="Filter by Employee ID"
+          value={filter.id}
+          onChange={handleIdFilterChange}
+          variant="outlined"
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="Filter by Cafe"
+          value={filter.cafe}
+          onChange={handleCafeFilterChange}
+          variant="outlined"
+          fullWidth
+          margin="normal"
+        />
+      </div>
       <div>
         {employees.map((employee) => (
           <EmployeeCard

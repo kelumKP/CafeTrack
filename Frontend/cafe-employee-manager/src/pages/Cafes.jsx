@@ -27,13 +27,18 @@ const Cafes = () => {
   };
 
   return (
-    <div>
-      <TextField
-        label="Filter by Location"
-        value={locationFilter}
-        onChange={(e) => setLocationFilter(e.target.value)}
-      />
-      <Button onClick={() => navigate('/add-cafe')}>Add New Cafe</Button>
+    <div className="main-content">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <TextField
+          label="Filter by Location"
+          value={locationFilter}
+          onChange={(e) => setLocationFilter(e.target.value)}
+          style={{ marginRight: '20px' }}
+        />
+        <Button onClick={() => navigate('/add-cafe')} variant="contained" color="primary">
+          Add New Cafe
+        </Button>
+      </div>
       <div>
         {cafes.map((cafe) => (
           <CafeCard key={cafe.id} cafe={cafe} onEdit={() => navigate(`/edit-cafe/${cafe.id}`)} onDelete={handleDelete} />
