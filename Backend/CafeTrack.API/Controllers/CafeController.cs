@@ -24,7 +24,7 @@ namespace CafeTrack.API.Controllers
             var result = await _mediator.Send(query);
 
             // Sort by number of employees in descending order
-            var sortedResult = result.OrderByDescending(cafe => cafe.Employees).ToList();
+            var sortedResult = result.OrderByDescending(cafe => cafe.Name).ToList();
 
             return Ok(sortedResult);
         }

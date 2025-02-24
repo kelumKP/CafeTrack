@@ -33,8 +33,7 @@ namespace CafeTrack.Application.Features.Cafes.Queries
                     Name = c.Name,
                     Description = c.Description,
                     Logo = c.Logo,
-                    Location = c.Location,
-                    Employees = c.EmployeeCafes.Count
+                    Location = c.Location
                 })
                 .ToListAsync(cancellationToken);
 

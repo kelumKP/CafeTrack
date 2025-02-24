@@ -33,8 +33,7 @@ namespace CafeTrack.Application.Features.Cafes.Queries
                 Name = cafe.Name,
                 Description = cafe.Description,
                 Logo = cafe.Logo,
-                Location = cafe.Location,
-                Employees = cafe.EmployeeCafes.Count // Number of employees
+                Location = cafe.Location
             };
         }
     }
